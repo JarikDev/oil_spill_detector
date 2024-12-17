@@ -7,16 +7,37 @@
 </head>
 
 <body>
-    <!-- <FORM action=".." method="POST" enctype="multipart/form-data">
-        <input type="file" id="file" placeholder="upload a file"       
-        name="file">
-        <button type="submit">Submit</button>
-    </FORM> -->
-    <form action="javascript:upload()">
-        Выберите изображение: <input type="file" value="Выберите изображение:" id="picture"><br>
-        Отправить: <input type="submit" value="Отправить">
-    </form>
+    <style>
+        body {
+            background-image: url('https://www.absorbentsonline.com/spill-containment-blog/wp-content/uploads/2024/06/oil_spill_in_a_marina_photograph-1024x574.png');
+        }
 
+        .center-flex {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .bgimg {
+            background-color: lightgray;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            border: 100px solid black;
+            border-color: red blue green yellow;
+            border-radius: 50%;
+        }
+    </style>
+    <div class="bgimg">
+
+        <br>
+        <form action="javascript:upload()">
+            <h1>Oil spill detector application</h1>
+            Выберите изображение: <input type="file" value="Выберите изображение:" id="picture"><br>
+            <input type="submit" value="Отправить">
+        </form>
+    </div>
 </body>
 
 <script type="text/javascript">
@@ -28,7 +49,6 @@
             var reader = new FileReader();
             var base64 = ""
             reader.onloadend = async () => {
-                // Use a regex to remove data url part
                 const base64String = reader.result
                     .replace('data:', '')
                     .replace(/^.+,/, '');
@@ -45,35 +65,12 @@
                     }
                 })
 
-
-                // const reader = await response.body.getReader();
-                // let { value: chunk, done: readerDone } = await reader.read();
-                // const utf8Decoder = new TextDecoder('utf-8');
-                // json = chunk ? utf8Decoder.decode(chunk) : '';
                 const json = await response.text();
                 console.log(json);
 
                 alert(json)
             };
             await reader.readAsDataURL(file);
-            // console.log(encoded);
-            // var encoded = Base64.encode(uploadform);
-
-            // response = await fetch("/check", {
-            //     method: "POST",
-            //     body: JSON.stringify({
-            //         image: base64
-            //     }),
-            //     headers: {
-            //         "Content-type": "application/json; charset=UTF-8",
-            //         "Access-Control-Allow-Origin": "*"
-            //     }
-            // })
-
-            // const json = await response.text();
-            // console.log(json);
-
-            // alert(json)
         } catch (error) {
             console.error(error.message);
         }

@@ -13,7 +13,7 @@ from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPool2D
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.utils import img_to_array
 
-# from flask_cors import CORS
+from flask_cors import CORS
 warnings.filterwarnings('ignore')
 
 ml_model = None
@@ -92,7 +92,7 @@ def get_model():
     return model
 
 app = Flask(__name__)
-# CORS(app)
+CORS(app)
 
 @app.route("/status", methods=['GET'])
 def get_status():
