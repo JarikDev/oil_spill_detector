@@ -86,6 +86,9 @@
 </div>
 
 <script>
+    const serverPort = {{ server_port }};
+    const serverUrl = `http://localhost:${serverPort}/check`;
+
     const fileInput = document.getElementById('file-upload');
     const submitButton = document.getElementById('submit-btn');
     const statusDiv = document.getElementById('status');
@@ -119,7 +122,7 @@
             const base64Image = e.target.result.split(',')[1];
 
             try {
-                const response = await fetch('http://localhost:8080/check', {
+                const response = await fetch(serverUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -133,7 +136,6 @@
 
                 const result = await response.text();
 
-                // Display the result
                 if (result === 'Oil spill') {
                     statusDiv.textContent = 'Розлив обнаружен!';
                     statusDiv.className = 'result error';

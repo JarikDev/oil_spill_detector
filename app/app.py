@@ -3,6 +3,7 @@ import io
 import os
 import os.path
 import warnings
+import yaml
 
 import cv2
 import numpy as np
@@ -13,65 +14,74 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.utils import img_to_array
 
 from flask_cors import CORS
+
 warnings.filterwarnings('ignore')
 
 ml_model = None
 
 
+def load_config(file_path):
+    with open(file_path, 'r') as file:
+        return yaml.safe_load(file)
+
+
+config = load_config('config.yaml')
+port = config['app']['port']
+train_path = config['datasets']['train']
+validation_path = config['datasets']['validation']
+test_path = config['datasets']['test']
+
+
 def base64_to_image(image_base64):
     img = Image.open(io.BytesIO(base64.decodebytes(bytes(image_base64, "utf-8"))))
-    img = img.resize((150, 150))  
-    img_array = img_to_array(img) / 255.0  
-    img_array = np.expand_dims(img_array, axis=0)  
+    img = img.resize((150, 150))
+    img_array = img_to_array(img) / 255.0
+    img_array = np.expand_dims(img_array, axis=0)
     return img_array
 
 
 def load_and_preprocess_image(image_path):
     img = Image.open(image_path)
-    img = img.resize((150, 150))  
-    img_array = img_to_array(img) / 255.0  
-    img_array = np.expand_dims(img_array, axis=0)  
+    img = img.resize((150, 150))
+    img_array = img_to_array(img) / 255.0
+    img_array = np.expand_dims(img_array, axis=0)
     return img_array
 
 
 def populate_data(data):
-    features, labels = zip(*data) 
-    return np.array(features) / 255.0, np.array(labels)     
-    
+    features, labels = zip(*data)
+    return np.array(features) / 255.0, np.array(labels)
+
 
 def get_model():
-    train = r'D:\my_space\mifi_ml\hakaton1\final dataset used for oil spill\dataset-final\dataset\train'
-    validation = r'D:\my_space\mifi_ml\hakaton1\final dataset used for oil spill\dataset-final\dataset\Validation'
-    test = r'D:\my_space\mifi_ml\hakaton1\final dataset used for oil spill\dataset-final\dataset\test'
-
     labels = ['Non Oil Spill', 'Oil Spill']
     img_size = 150
 
     def load_data(directory):
         data = []
-        for label in labels: 
-            path = os.path.join(directory, label)  
+        for label in labels:
+            path = os.path.join(directory, label)
             class_num = labels.index(label)
 
             for img in os.listdir(path):
                 img_path = os.path.join(path, img)
                 img_arr = cv2.imread(img_path)
 
-                if img_arr is not None: 
-                    img_arr = cv2.resize(img_arr, (img_size, img_size))  
-                    data.append([img_arr, class_num])  
+                if img_arr is not None:
+                    img_arr = cv2.resize(img_arr, (img_size, img_size))
+                    data.append([img_arr, class_num])
         return np.array(data, dtype=object)
 
-    train_data = load_data(train)
-    test_data = load_data(test)
-    validation_data = load_data(validation)
+    train_data = load_data(train_path)
+    test_data = load_data(test_path)
+    validation_data = load_data(validation_path)
     print("Shape of training data:", train_data.shape)
     print("Shape of test data:", test_data.shape)
     print("Shape of valdata:", validation_data.shape)
 
     x_train, y_train = populate_data(train_data)
-    x_val, y_val = populate_data(load_data(validation))  
-    x_test, y_test = populate_data(load_data(test))  
+    x_val, y_val = populate_data(load_data(validation_path))
+    x_test, y_test = populate_data(load_data(test_path))
 
     print("Shapes:")
     print(f"x_train: {x_train.shape}, y_train: {y_train.shape}")
@@ -106,7 +116,7 @@ def get_status():
 
 @app.route("/upload", methods=['GET'])
 def get_upload_page():
-    return render_template('index.html')
+    return render_template('index.html', server_port=port)
 
 
 def get_response(message, status):
@@ -117,14 +127,14 @@ def get_response(message, status):
 def check_oil_spill():
     if ml_model is None:
         return get_response("ML Model is None", 500)
-    
+
     content = request.json
     print(content)
     img = content['image']
     print(img)
     processed_image = base64_to_image(img)
     prediction = ml_model.predict(processed_image)
-    predicted_class = (prediction > 0.5).astype("int32")  
+    predicted_class = (prediction > 0.5).astype("int32")
     print("Predicted class:", predicted_class[0][0])
 
     msg = "Oil spill" if predicted_class[0][0] == 1 else "Not oil spill"
@@ -133,4 +143,4 @@ def check_oil_spill():
 
 if __name__ == "__main__":
     ml_model = get_model()
-    app.run(host='localhost', port=7788, debug=True, use_reloader=False)
+    app.run(host='localhost', port=port, debug=True, use_reloader=False)

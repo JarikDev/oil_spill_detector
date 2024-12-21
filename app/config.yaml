@@ -1,0 +1,6 @@
+app:
+  port: 7788
+datasets:
+  train: D:\archive\final dataset used for oil spill\dataset-final\dataset\train
+  validation: D:\archive\final dataset used for oil spill\dataset-final\dataset\Validation
+  test: D:\archive\final dataset used for oil spill\dataset-final\dataset\test
