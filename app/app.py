@@ -25,7 +25,7 @@ def load_config(file_path):
         return yaml.safe_load(file)
 
 
-config = load_config('config.yaml')
+config = load_config(r'D:\my_space\mifi_ml\hakaton1\oil_spill\app\config.yaml')
 port = config['app']['port']
 train_path = config['datasets']['train']
 validation_path = config['datasets']['validation']
@@ -142,5 +142,5 @@ def check_oil_spill():
 
 
 if __name__ == "__main__":
-    ml_model = get_model()
+    # ml_model = get_model()
     app.run(host='localhost', port=port, debug=True, use_reloader=False)

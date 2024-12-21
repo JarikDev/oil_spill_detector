@@ -1,6 +1,6 @@
 app:
   port: 7788
 datasets:
-  train: D:\archive\final dataset used for oil spill\dataset-final\dataset\train
-  validation: D:\archive\final dataset used for oil spill\dataset-final\dataset\Validation
-  test: D:\archive\final dataset used for oil spill\dataset-final\dataset\test
+  train: D:\my_space\mifi_ml\hakaton1\final dataset used for oil spill\dataset-final\dataset\train
+  validation: D:\my_space\mifi_ml\hakaton1\final dataset used for oil spill\dataset-final\dataset\Validation
+  test: D:\my_space\mifi_ml\hakaton1\final dataset used for oil spill\dataset-final\dataset\test
