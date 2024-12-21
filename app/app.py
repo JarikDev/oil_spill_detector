@@ -40,9 +40,9 @@ def populate_data(data):
     
 
 def get_model():
-    train = r'D:\archive\final dataset used for oil spill\dataset-final\dataset\train'
-    validation = r'D:\archive\final dataset used for oil spill\dataset-final\dataset\Validation'
-    test = r'D:\archive\final dataset used for oil spill\dataset-final\dataset\test'
+    train = r'D:\my_space\mifi_ml\hakaton1\final dataset used for oil spill\dataset-final\dataset\train'
+    validation = r'D:\my_space\mifi_ml\hakaton1\final dataset used for oil spill\dataset-final\dataset\Validation'
+    test =r'D:\my_space\mifi_ml\hakaton1\final dataset used for oil spill\dataset-final\dataset\test'
 
     labels = ['Non Oil Spill', 'Oil Spill']
     img_size = 150
@@ -132,4 +132,4 @@ def check_oil_spill():
 
 if __name__ == "__main__":
     ml_model = get_model()
-    app.run(host='localhost', port=8080, debug=True, use_reloader=False)
+    app.run(host='localhost', port=7788, debug=True, use_reloader=False)

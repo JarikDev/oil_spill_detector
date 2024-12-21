@@ -3,13 +3,16 @@
 
 <head>
     <meta charset='utf-8'>
-    <title>Check for oil spill</title>
+    <title>EcoVision</title>
 </head>
 
 <body>
     <style>
         body {
             background-image: url('https://www.absorbentsonline.com/spill-containment-blog/wp-content/uploads/2024/06/oil_spill_in_a_marina_photograph-1024x574.png');
+            background-size: cover;
+            /* background-repeat: no-repeat; */
+            /* background-position: center center; */
         }
 
         .center-flex {
@@ -19,21 +22,21 @@
         }
 
         .bgimg {
-            background-color: lightgray;
+            background-color: lightblue;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 32px;
-            border: 100px solid black;
-            border-color: red blue green yellow;
-            border-radius: 50%;
+            border: 70px solid black;
+            border-color: rgba(255, 68, 0, 0.726) rgba(255, 68, 0, 0.726) rgba(255, 68, 0, 0.726) rgba(255, 68, 0, 0.726);
+            border-radius: 10%;
         }
     </style>
     <div class="bgimg">
 
         <br>
         <form action="javascript:upload()">
-            <h1>Oil spill detector application</h1>
+            <h1>Oil spill detection application</h1>
             Выберите изображение: <input type="file" value="Выберите изображение:" id="picture"><br>
             <input type="submit" value="Отправить">
         </form>
