@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oil Spill Detector</title>
+    <title>EcoVision</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,20 +20,37 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        header h1 {
-            color: #ffffff;
-        }
+        H1 {
+  overflow: hidden;
+  text-shadow:
+    0 0 tomato,
+    0 0 yellowgreen,
+    0 0 skyblue;
+  color: transparent;
+  transition: all 1s;
+}
+
+H1:hover {
+  text-shadow:
+    -400px 0 tomato,
+    400px 0 yellowgreen,
+    0 0 skyblue;
+  }
         header p {
             color: #e0e0e0;
             font-size: 16px;
         }
         .container {
+            border: 5px solid black;
             background: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             text-align: center;
-            width: 300px;
+            width: 500px;
+            height: 500px;
+            /* min-width: 250px;
+            min-height: 250px; */
         }
         .upload-area {
             margin-bottom: 20px;
@@ -51,10 +68,13 @@
         }
         .image-preview {
             margin-top: 20px;
+            margin-bottom: 20px;
+            border: 5px solid purple;
+            border-radius: 5%;
         }
         .image-preview img {
             max-width: 100%;
-            max-height: 150px;
+            max-height: 250px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
