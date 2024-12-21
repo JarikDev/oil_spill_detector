@@ -7,7 +7,6 @@ import warnings
 import cv2
 import numpy as np
 from flask import Flask, Response, render_template, request
-from keras.layers import Dense, Dropout
 from PIL import Image
 from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPool2D
 from tensorflow.keras.models import Sequential
@@ -18,12 +17,14 @@ warnings.filterwarnings('ignore')
 
 ml_model = None
 
+
 def base64_to_image(image_base64):
     img = Image.open(io.BytesIO(base64.decodebytes(bytes(image_base64, "utf-8"))))
     img = img.resize((150, 150))  
     img_array = img_to_array(img) / 255.0  
     img_array = np.expand_dims(img_array, axis=0)  
     return img_array
+
 
 def load_and_preprocess_image(image_path):
     img = Image.open(image_path)
@@ -32,14 +33,16 @@ def load_and_preprocess_image(image_path):
     img_array = np.expand_dims(img_array, axis=0)  
     return img_array
 
+
 def populate_data(data):
     features, labels = zip(*data) 
     return np.array(features) / 255.0, np.array(labels)     
     
+
 def get_model():
-    train = r'D:\my_space\mifi_ml\hakaton1\final dataset used for oil spill\dataset-final\dataset\train'
-    validation = r'D:\my_space\mifi_ml\hakaton1\final dataset used for oil spill\dataset-final\dataset\Validation'
-    test =r'D:\my_space\mifi_ml\hakaton1\final dataset used for oil spill\dataset-final\dataset\test'
+    train = r'D:\archive\final dataset used for oil spill\dataset-final\dataset\train'
+    validation = r'D:\archive\final dataset used for oil spill\dataset-final\dataset\Validation'
+    test = r'D:\archive\final dataset used for oil spill\dataset-final\dataset\test'
 
     labels = ['Non Oil Spill', 'Oil Spill']
     img_size = 150
@@ -91,19 +94,23 @@ def get_model():
 
     return model
 
+
 app = Flask(__name__)
 CORS(app)
+
 
 @app.route("/status", methods=['GET'])
 def get_status():
     return "Oil Spill App operational !!!"
 
+
 @app.route("/upload", methods=['GET'])
 def get_upload_page():
-    return render_template('upload.html')
+    return render_template('index.html')
 
 def get_response(message, status):
     return Response(message, status=status, mimetype='text/plain')
+
 
 @app.route("/check", methods=['POST'])
 def check_oil_spill():
@@ -122,6 +129,7 @@ def check_oil_spill():
     msg = "Oil spill" if predicted_class[0][0] == 1 else "Not oil spill"
     return Response(msg, status=200, mimetype='text/plain')
 
+
 if __name__ == "__main__":
     ml_model = get_model()
-    app.run(host='0.0.0.0', port=7788, debug=True)
+    app.run(host='localhost', port=8080, debug=True, use_reloader=False)
