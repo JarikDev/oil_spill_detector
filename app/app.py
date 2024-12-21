@@ -42,7 +42,7 @@ def populate_data(data):
 def get_model():
     train = r'D:\my_space\mifi_ml\hakaton1\final dataset used for oil spill\dataset-final\dataset\train'
     validation = r'D:\my_space\mifi_ml\hakaton1\final dataset used for oil spill\dataset-final\dataset\Validation'
-    test =r'D:\my_space\mifi_ml\hakaton1\final dataset used for oil spill\dataset-final\dataset\test'
+    test = r'D:\my_space\mifi_ml\hakaton1\final dataset used for oil spill\dataset-final\dataset\test'
 
     labels = ['Non Oil Spill', 'Oil Spill']
     img_size = 150
@@ -107,6 +107,7 @@ def get_status():
 @app.route("/upload", methods=['GET'])
 def get_upload_page():
     return render_template('index.html')
+
 
 def get_response(message, status):
     return Response(message, status=status, mimetype='text/plain')
