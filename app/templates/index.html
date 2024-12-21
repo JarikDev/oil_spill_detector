@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oil Spill Detector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #003366, #66a3ff);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        header h1 {
+            color: #ffffff;
+        }
+        header p {
+            color: #e0e0e0;
+            font-size: 16px;
+        }
+        .container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            width: 300px;
+        }
+        .upload-area {
+            margin-bottom: 20px;
+        }
+        .upload-area input {
+            display: none;
+        }
+        .upload-label {
+            display: inline-block;
+            background-color: #003366;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .image-preview {
+            margin-top: 20px;
+        }
+        .image-preview img {
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            min-height: 24px; /* To prevent jumping */
+        }
+        .result.success {
+            color: green;
+        }
+        .result.error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Детектор розлива нефти</h1>
+</header>
+<div class="container">
+    <div class="upload-area">
+        <label for="file-upload" class="upload-label">Загрузите изображение</label>
+        <input type="file" id="file-upload" accept="image/*">
+    </div>
+    <div class="image-preview" id="image-preview"></div>
+    <button id="submit-btn" disabled>Проанализировать</button>
+    <div id="status" class="result"></div>
+</div>
+
+<script>
+    const serverPort = {{ server_port }};
+    const serverUrl = `http://localhost:${serverPort}/check`;
+
+    const fileInput = document.getElementById('file-upload');
+    const submitButton = document.getElementById('submit-btn');
+    const statusDiv = document.getElementById('status');
+    const imagePreview = document.getElementById('image-preview');
+
+    let selectedFile = null;
+
+    fileInput.addEventListener('change', (event) => {
+        selectedFile = event.target.files[0];
+
+        if (selectedFile) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                imagePreview.innerHTML = `<img src="${e.target.result}" alt="Selected Image">`;
+            };
+            reader.readAsDataURL(selectedFile);
+
+            submitButton.disabled = false;
+            statusDiv.textContent = '';
+        }
+    });
+
+    submitButton.addEventListener('click', async () => {
+        if (!selectedFile) return;
+
+        statusDiv.textContent = 'Обработка фотографии...';
+        statusDiv.className = 'result';
+
+        const reader = new FileReader();
+        reader.onload = async function (e) {
+            const base64Image = e.target.result.split(',')[1];
+
+            try {
+                const response = await fetch(serverUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ image: base64Image })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Server error');
+                }
+
+                const result = await response.text();
+
+                if (result === 'Oil spill') {
+                    statusDiv.textContent = 'Розлив обнаружен!';
+                    statusDiv.className = 'result error';
+                } else {
+                    statusDiv.textContent = 'Розлив не обнаружен.';
+                    statusDiv.className = 'result success';
+                }
+            } catch (error) {
+                statusDiv.textContent = 'Ошибка: Не могу обработать файл.';
+                statusDiv.className = 'result error';
+            }
+        };
+        reader.readAsDataURL(selectedFile);
+    });
+</script>
+</body>
+</html>
