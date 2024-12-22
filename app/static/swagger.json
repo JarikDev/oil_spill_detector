@@ -1,0 +1,78 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "Oil Spill App",
+      "version": "1.0",
+      "description": "API для приложения Oil Spill Detection"
+    },
+    "host": "localhost:7788",
+    "basePath": "/swagger",
+    "schemes": ["http"],
+    "paths": {
+      "/status": {
+        "get": {
+          "summary": "Проверка статуса приложения",
+          "description": "Возвращает статус приложения.",
+          "responses": {
+            "200": {
+              "description": "Приложение работает корректно.",
+              "examples": {
+                "text/plain": "Oil Spill App operational !!!"
+              }
+            }
+          }
+        }
+      },
+      "/upload": {
+        "get": {
+          "summary": "Страница загрузки",
+          "description": "Возвращает страницу для загрузки файлов.",
+          "responses": {
+            "200": {
+              "description": "HTML-страница для загрузки."
+            }
+          }
+        }
+      },
+      "/check": {
+        "post": {
+          "summary": "Проверка на наличие разлива нефти",
+          "description": "Отправляет изображение для проверки, является ли на нем разлив нефти.",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "description": "JSON с изображением в base64",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "example": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA..."
+                  }
+                },
+                "required": ["image"]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Результат проверки изображения.",
+              "schema": {
+                "type": "string",
+                "enum": ["Oil spill", "Not oil spill"]
+              }
+            },
+            "500": {
+              "description": "Ошибка, если ML модель не инициализирована.",
+              "schema": {
+                "type": "string",
+                "example": "ML Model is None"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
