@@ -116,7 +116,8 @@ def get_status():
 
 @app.route("/upload", methods=['GET'])
 def get_upload_page():
-    return render_template('index.html', server_port=port)
+    # return render_template('index.html', server_port=port)
+    return render_template('upload2.html', server_port=port)
 
 
 def get_response(message, status):
