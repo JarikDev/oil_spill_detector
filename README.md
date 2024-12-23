@@ -114,4 +114,4 @@ datasets:
 - **Розлив не обнаружен.**: На изображении разливов нет.
 - **Ошибка: Не могу обработать файл.**: Возникла ошибка при загрузке или обработке.
 
-<img src="images/application_work.gif" width="200" height="150" />
+<img src="images/EcoVision.gif" width="200" height="150" />
