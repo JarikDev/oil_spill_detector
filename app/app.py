@@ -166,5 +166,5 @@ def check_oil_spill():
 
 
 if __name__ == "__main__":
-    # ml_model = get_model()
+    ml_model = get_model()
     app.run(host='localhost', port=port, debug=True, use_reloader=False)
