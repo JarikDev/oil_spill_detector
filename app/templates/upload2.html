@@ -12,6 +12,7 @@
             padding: 0;
             font-family: 'Arial', sans-serif;
             background-image: url('https://www.absorbentsonline.com/spill-containment-blog/wp-content/uploads/2024/06/oil_spill_in_a_marina_photograph-1024x574.png');
+            /* background-image: url('https://presentation-creation.ru/images/potx/nature/ecologichrskaya-volna.jpg'); */
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -28,28 +29,33 @@
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-            max-width: 400px;
+            /* max-width: 400px; */
             margin: auto;
             text-align: center;
             color: #fff;
+            width: 600px;
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 28pt;
             margin-bottom: 10px;
         }
 
         p {
+            font-size: 14pt;
             margin-bottom: 20px;
         }
 
         input[type="file"],
         input[type="submit"] {
             margin: 10px 0;
-            padding: 10px;
+            /* padding: 10px; */
+            padding-top: 10px;
+            padding-bottom: 10px;
             border: none;
             border-radius: 5px;
-            width: 100%;
+            /* width: 100%; */
+            width: 500px;
             font-size: 1rem;
             transition: all 0.3s ease;
         }
@@ -74,6 +80,24 @@
             margin-top: 20px;
             font-size: 0.9rem;
         }
+
+        .image-preview img {
+            width: 500px;
+            height: 500px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .spill {
+            font-size: 24pt;
+            color: red;
+            font-weight: bold;
+        }
+        .no-spill {
+            color: greenyellow;
+            font-weight: bold;
+            font-size: 24pt;
+        }
     </style>
 </head>
 
@@ -81,11 +105,13 @@
     <div class="overlay"></div>
     <div class="container">
         <h1>EcoVision</h1>
-        <p>Upload an image to detect oil spills.</p>
+        <p>Загрузите изображение на проверку.</p>
         <form action="javascript:upload()">
-            <input type="file" id="picture" accept="image/*" required>
-            <input type="submit" value="Analyze">
+            <input type="file" id="picture" accept="image/*" required title="Выбрать">
+            <div class="image-preview" id="image-preview"></div>
+            <input type="submit" value="Загрузить">
         </form>
+        <div id="check-result"></div>
         <footer>© 2024 EcoVision</footer>
     </div>
     <footer>© 2024 EcoVision | All Rights Reserved</footer>
@@ -93,7 +119,9 @@
     <script>
         async function upload() {
             try {
+                const imagePreview = document.getElementById('image-preview');
                 const uploadform = document.getElementById('picture').files;
+                const checkResult = document.getElementById('check-result');
                 if (uploadform.length === 0) {
                     alert("Please select an image!");
                     return;
@@ -113,12 +141,19 @@
                         headers: {
                             "Content-type": "application/json; charset=UTF-8",
                         }
+                    }).then(async response => {
+                        var resp = await response.text()
+                        console.log("result: " + resp);
+                        if (resp == "1") {
+                            checkResult.innerHTML = `<div class="spill">РАЗЛИВ ОБНАРУЖЕН</div>`;
+                        } else {
+                            checkResult.innerHTML = `<div class="no-spill">РАЗЛИВ НЕ ОБНАРУЖЕН</div>`;
+                        }
                     });
-
-                    const result = await response.text();
-                    alert(result); // Show the result to the user
                 };
-
+                reader.onload = function (e) {
+                    imagePreview.innerHTML = `<img src="${e.target.result}" alt="Selected Image">`;
+                };
                 reader.readAsDataURL(file);
             } catch (error) {
                 console.error("Error uploading the image:", error);

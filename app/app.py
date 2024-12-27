@@ -126,6 +126,7 @@ def get_response(message, status):
 
 @app.route("/check", methods=['POST'])
 def check_oil_spill():
+    # return Response("1", status=200, mimetype='text/plain')
     if ml_model is None:
         return get_response("ML Model is None", 500)
 
@@ -138,7 +139,9 @@ def check_oil_spill():
     predicted_class = (prediction > 0.5).astype("int32")
     print("Predicted class:", predicted_class[0][0])
 
-    msg = "Oil spill" if predicted_class[0][0] == 1 else "Not oil spill"
+    # msg = "Oil spill" if predicted_class[0][0] == 1 else "Not oil spill"
+    msg = "1" if predicted_class[0][0] == 1 else "0"
+    # msg =  predicted_class[0][0]
     return Response(msg, status=200, mimetype='text/plain')
 
 
