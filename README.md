@@ -59,7 +59,9 @@
 
 ### 1. Клонирование репозитория
 
-Скачайте проект и перейдите в папку с ним:
+Скачайте датасет, проект и перейдите в папку с ним:
+
+Датасет: https://www.kaggle.com/datasets/vighneshanand/oil-spill-dataset-binary-image-classification
 
 ```bash
 git clone https://github.com/JarikDev/oil_spill_detector.git
@@ -76,7 +78,7 @@ pip install -r requirements.txt
 
 ### 3. Запуск серверной части
 
-Выполните команду для запуска Flask-приложения:
+Выполните команду для запуска Flask-приложения, предварительно настроив в yaml файле пути к динным:
 
 ```bash
 python app.py
