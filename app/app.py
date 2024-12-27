@@ -12,6 +12,7 @@ from PIL import Image
 from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPool2D
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.utils import img_to_array
+from flask_swagger_ui import get_swaggerui_blueprint
 
 from flask_cors import CORS
 
@@ -107,10 +108,33 @@ def get_model():
 
 app = Flask(__name__)
 CORS(app)
+# Конфигурация Swagger UI
+SWAGGER_URL = '/swagger'  # URL для доступа к Swagger UI
+API_URL = '/static/swagger.json'  # Путь к вашему Swagger JSON-файлу
 
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Oil Spill App"
+    }
+)
+
+app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
 @app.route("/status", methods=['GET'])
 def get_status():
+    """
+    Проверка статуса приложения
+    ---
+    responses:
+      200:
+        description: Статус приложения
+    """
+    global ml_model
+    if ml_model is None:
+        ml_model = get_model()
+    
     return "Oil Spill App operational !!!"
 
 
