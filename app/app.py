@@ -26,7 +26,7 @@ def load_config(file_path):
         return yaml.safe_load(file)
 
 
-config = load_config('config.yaml')
+config = load_config(r'D:\my_space\mifi_ml\hakaton1\oil_spill\app\config.yaml')
 port = config['app']['port']
 train_path = config['datasets']['train']
 validation_path = config['datasets']['validation']
@@ -140,7 +140,8 @@ def get_status():
 
 @app.route("/upload", methods=['GET'])
 def get_upload_page():
-    return render_template('index.html', server_port=port)
+    # return render_template('index.html', server_port=port)
+    return render_template('upload2.html', server_port=port)
 
 
 def get_response(message, status):
@@ -149,6 +150,7 @@ def get_response(message, status):
 
 @app.route("/check", methods=['POST'])
 def check_oil_spill():
+    # return Response("1", status=200, mimetype='text/plain')
     if ml_model is None:
         return get_response("ML Model is None", 500)
 
@@ -161,7 +163,9 @@ def check_oil_spill():
     predicted_class = (prediction > 0.5).astype("int32")
     print("Predicted class:", predicted_class[0][0])
 
-    msg = "Oil spill" if predicted_class[0][0] == 1 else "Not oil spill"
+    # msg = "Oil spill" if predicted_class[0][0] == 1 else "Not oil spill"
+    msg = "1" if predicted_class[0][0] == 1 else "0"
+    # msg =  predicted_class[0][0]
     return Response(msg, status=200, mimetype='text/plain')
 
 

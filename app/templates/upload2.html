@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoVision - Oil Spill Detection</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-image: url('https://www.absorbentsonline.com/spill-containment-blog/wp-content/uploads/2024/06/oil_spill_in_a_marina_photograph-1024x574.png');
+            /* background-image: url('https://presentation-creation.ru/images/potx/nature/ecologichrskaya-volna.jpg'); */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            /* max-width: 400px; */
+            margin: auto;
+            text-align: center;
+            color: #fff;
+            width: 600px;
+        }
+
+        h1 {
+            font-size: 28pt;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 14pt;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"],
+        input[type="submit"] {
+            margin: 10px 0;
+            /* padding: 10px; */
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            /* width: 100%; */
+            width: 500px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="file"] {
+            background: rgba(255, 255, 255, 0.6);
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        input[type="submit"] {
+            background: #00d4ff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background: #0099cc;
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .image-preview img {
+            width: 500px;
+            height: 500px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .spill {
+            font-size: 24pt;
+            color: red;
+            font-weight: bold;
+        }
+        .no-spill {
+            color: greenyellow;
+            font-weight: bold;
+            font-size: 24pt;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <h1>EcoVision</h1>
+        <p>Загрузите изображение на проверку.</p>
+        <form action="javascript:upload()">
+            <input type="file" id="picture" accept="image/*" required title="Выбрать">
+            <div class="image-preview" id="image-preview"></div>
+            <input type="submit" value="Загрузить">
+        </form>
+        <div id="check-result"></div>
+        <footer>© 2024 EcoVision</footer>
+    </div>
+    <footer>© 2024 EcoVision | All Rights Reserved</footer>
+
+    <script>
+        async function upload() {
+            try {
+                const imagePreview = document.getElementById('image-preview');
+                const uploadform = document.getElementById('picture').files;
+                const checkResult = document.getElementById('check-result');
+                if (uploadform.length === 0) {
+                    alert("Please select an image!");
+                    return;
+                }
+                const file = uploadform[0];
+                const reader = new FileReader();
+
+                reader.onloadend = async () => {
+                    const base64String = reader.result
+                        .replace('data:', '')
+                        .replace(/^.+,/, '');
+
+                    console.log(base64String); // Debugging purposes
+                    const response = await fetch("/check", {
+                        method: "POST",
+                        body: JSON.stringify({ image: base64String }),
+                        headers: {
+                            "Content-type": "application/json; charset=UTF-8",
+                        }
+                    }).then(async response => {
+                        var resp = await response.text()
+                        console.log("result: " + resp);
+                        if (resp == "1") {
+                            checkResult.innerHTML = `<div class="spill">РАЗЛИВ ОБНАРУЖЕН</div>`;
+                        } else {
+                            checkResult.innerHTML = `<div class="no-spill">РАЗЛИВ НЕ ОБНАРУЖЕН</div>`;
+                        }
+                    });
+                };
+                reader.onload = function (e) {
+                    imagePreview.innerHTML = `<img src="${e.target.result}" alt="Selected Image">`;
+                };
+                reader.readAsDataURL(file);
+            } catch (error) {
+                console.error("Error uploading the image:", error);
+                alert("An error occurred while uploading the image.");
+            }
+        }
+    </script>
+</body>
+
+</html>
